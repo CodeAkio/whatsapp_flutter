@@ -10,10 +10,10 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primaryColor: AppColors.primary,
-          colorScheme: Theme.of(context)
-              .colorScheme
-              .copyWith(secondary: AppColors.secondary)),
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+        primary: AppColors.primary,
+        secondary: AppColors.secondary,
+      )),
       title: 'WhatsApp',
       home: const LoginPage(),
     );
