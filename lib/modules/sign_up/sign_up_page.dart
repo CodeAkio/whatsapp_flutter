@@ -10,6 +10,42 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  var _errorMessage = "";
+
+  void _validateFields() {
+    String name = _nameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    if (name.isEmpty) {
+      setState(() {
+        _errorMessage = "Nome obrigatório";
+      });
+      return;
+    }
+
+    if (email.isEmpty) {
+      setState(() {
+        _errorMessage = "E-mail obrigatório";
+      });
+      return;
+    }
+
+    if (password.isEmpty) {
+      setState(() {
+        _errorMessage = "Senha obrigatória";
+      });
+      return;
+    }
+
+    setState(() {
+      _errorMessage = "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +71,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: TextField(
+                    controller: _nameController,
                     autofocus: true,
                     keyboardType: TextInputType.text,
                     style: const TextStyle(fontSize: 20),
@@ -51,6 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: TextField(
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     style: const TextStyle(fontSize: 20),
                     decoration: InputDecoration(
@@ -64,6 +102,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
                 TextField(
+                  controller: _passwordController,
+                  obscureText: true,
                   keyboardType: TextInputType.text,
                   style: const TextStyle(fontSize: 20),
                   decoration: InputDecoration(
@@ -80,13 +120,21 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: ElevatedButton(
                     child: const Text("Entrar",
                         style: TextStyle(color: Colors.white, fontSize: 20)),
-                    onPressed: () {},
+                    onPressed: () {
+                      _validateFields();
+                    },
                     style: ElevatedButton.styleFrom(
                         primary: AppColors.secondary,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 16),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32))),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    _errorMessage,
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
               ],
