@@ -1,9 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:whatsapp_flutter/modules/home/home_page.dart';
 import 'package:whatsapp_flutter/shared/themes/app_colors.dart';
 import 'package:whatsapp_flutter/shared/themes/app_images.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:whatsapp_flutter/models/User.dart';
 
 class SignUpPage extends StatefulWidget {
-  SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -34,6 +38,13 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
+    if (email.length < 6) {
+      setState(() {
+        _errorMessage = "O E-mail deve ter no mínimo 6 caracteres";
+      });
+      return;
+    }
+
     if (password.isEmpty) {
       setState(() {
         _errorMessage = "Senha obrigatória";
@@ -41,8 +52,30 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
-    setState(() {
-      _errorMessage = "";
+    var user = UserModel();
+    user.name = name;
+    user.email = email;
+    user.password = password;
+
+    _registerUser(user);
+  }
+
+  _registerUser(UserModel user) async {
+    await Firebase.initializeApp();
+
+    var auth = FirebaseAuth.instance;
+
+    auth
+        .createUserWithEmailAndPassword(
+            email: user.email, password: user.password)
+        .then((firebaseUser) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
+    }).catchError((error) {
+      setState(() {
+        _errorMessage =
+            "Error ao cadastrar, verifique os campos e tente novamente";
+      });
     });
   }
 
@@ -118,7 +151,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 16, bottom: 10),
                   child: ElevatedButton(
-                    child: const Text("Entrar",
+                    child: const Text("Cadastrar",
                         style: TextStyle(color: Colors.white, fontSize: 20)),
                     onPressed: () {
                       _validateFields();
