@@ -38,16 +38,16 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
-    if (email.length < 6) {
+    if (password.isEmpty) {
       setState(() {
-        _errorMessage = "O E-mail deve ter no mínimo 6 caracteres";
+        _errorMessage = "Senha obrigatória";
       });
       return;
     }
 
-    if (password.isEmpty) {
+    if (password.length < 6) {
       setState(() {
-        _errorMessage = "Senha obrigatória";
+        _errorMessage = "A senha deve ter no mínimo 6 caracteres";
       });
       return;
     }
